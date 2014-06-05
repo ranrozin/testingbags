@@ -76,12 +76,13 @@ class loginHandler(baseHandler):
 					self.redirect('static/search.html') 
 					return
 			else:
-				path = os.path.join(os.path.dirname(__file__), 'templates\ind.html')
+				path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
 				logging.debug(path)
 				params= {}
 				self.write(template.render(path,params))						
 		else:	
-			path = os.path.join(os.path.dirname(__file__), 'templates\ind.html')
+			path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
+			logging.debug(path)
 			params= {}
 			self.write(template.render(path,params))						
 			  
@@ -97,7 +98,7 @@ class loginHandler(baseHandler):
 			session['password'] = self.request.get('password','').lower()
 			self.redirect('static/search.html') 
 		else:
-			path = os.path.join(os.path.dirname(__file__), 'templates\ind.html')
+			path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
 			params= {"ERROR": "email or password are incorrect"}
 			self.write(template.render(path,params))						
 					
@@ -110,7 +111,7 @@ class logoutHandler(baseHandler):
 		if session.is_active(): # we have the credentials
 			session.terminate()
 
-		path = os.path.join(os.path.dirname(__file__), 'templates\ind.html')
+		path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
 		params= {}
 		self.write(template.render(path,params))						
 		
@@ -121,7 +122,7 @@ class newHandler(baseHandler):
 		if session.is_active() == False:
 			self.redirect('/')
 		
-		path = os.path.join(os.path.dirname(__file__), 'templates\card.html')
+		path = os.path.join(os.path.dirname(__file__), 'templates/card.html')
 		params= {}
 		self.write(template.render(path,params))						
 		return
@@ -134,7 +135,7 @@ class submitcardHandler(baseHandler):
 	def post (self):
 		session = get_current_session()
 		if session.is_active() == False:
-			path = os.path.join(os.path.dirname(__file__), 'templates\ind.html')
+			path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
 			params= {}
 			self.write(template.render(path,params))						
 			return
@@ -166,7 +167,7 @@ class searchcardHandler(baseHandler):
 	def post (self):
 		session = get_current_session()
 		if session.is_active() == False:
-			path = os.path.join(os.path.dirname(__file__), 'templates\ind.html')
+			path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
 			params= {}
 			self.write(template.render(path,params))						
 			return
@@ -196,13 +197,13 @@ class gethcardHandler(baseHandler):
 	def post (self):
 		session = get_current_session()
 		if session.is_active() == False:
-			path = os.path.join(os.path.dirname(__file__), 'templates\ind.html')
+			path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
 			params= {}
 			self.write(template.render(path,params))						
 			return
 		term = self.request.get('ID','')
 
-		path = os.path.join(os.path.dirname(__file__), 'templates\card.html')
+		path = os.path.join(os.path.dirname(__file__), 'templates/card.html')
 		card = checkIfEmailExist(term, True ) 
 		if ( card ):
 			params = card.to_dict() 
