@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <title>Card viea </title>
+
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+	  <div class="myhead">
+		<a href="/logout">Logout</a>
+	  </div>
+
+	<div class="container">
+	  
+      <form class="myform" role="form" action="/search" method="post">
+        <h3>card ID {{id}}</h3>
+        <div class="page1">
+			<div class="form-group">
+				<div class="col-xs-5">
+					<label class="control-label" for="fName">Nom:</label>  
+					<input id="fName" name="fName" type="text" class="form-control" value="{{fname}}" >
+				</div>	
+				<div class="col-xs-5">
+					<label class="control-label" for="lName">Pernom:</label>  
+					<input id="lName" name="lName" type="text" class="form-control" value="{{fname}}" >
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-10">
+					<label class="control-label" for="fName">Adresse:</label>  
+					<input id="fName" name="address" type="text" class="form-control" value="{{address}}" >
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-5" >
+					<label class="control-label" for="tel_home">Tel Domicile:</label>  
+					<input id="tel_home" name="tel_home" type="tel" class="form-control" value="{{tel_home}}" >
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-5" >
+					<label class="control-label" for="email">Email:</label>  
+					<input id="email" name="email" type="email" class="form-control" value="{{email}}" >
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-5" >
+					<label class="control-label" for="birth_date">Date De Naissance:</label>  
+					<input id="birth_date" name="birth_date" type="date" class="form-control" value="{{birth_date}}" >
+				</div>	
+			</div>
+			
+
+			<div class="form-group ">
+				<div class="col-xs-5 clear-left" >
+					<label class="control-label" for="ref_doctor_name">Medicin Refrent Dr.:</label>  
+					<input id="ref_doctor_name" name="ref_doctor_name" type="text" class="form-control" value="{{ref_doctor_name}}" >
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<div class="col-xs-5">
+					<label class="control-label" for="ref_doctor_tel">Tel:</label>  
+					<input id="ref_doctor_tel" name="ref_doctor_tel" type="tel" class="form-control" value="{{ref_doctor_tel}}" >
+				</div>	
+			</div>
+
+			<div class="form-group ">
+				<div class="col-xs-5 clear-left" >
+					<label class="control-label" for="spec_doctor_name">Medicin Specialiste Dr.:</label>  
+					<input id="spec_doctor_name" name="spec_doctor_name" type="text" class="form-control" value="{{spec_doctor_name}}" >
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<div class="col-xs-5">
+					<label class="control-label" for="spec_doctor_tel">Tel:</label>  
+					<input id="spec_doctor_tel" name="spec_doctor_tel" type="tel" class="form-control" value="{{spec_doctor_tel}}" >
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-5">
+					<label class="control-label" for="id_number">No Secu:</label>  
+					<input id="id_number" name="id_number" type="text" class="form-control" value="{{id_number}}" >
+				</div>	
+			</div>
+			<div class="form-group">
+				<div class="col-xs-5 clear-left	">
+					<label class="control-label" for="blodTyoe">Groupe Sanguin:</label>  
+					<input id="blodTyoe" name="blodTyoe" type="text" class="form-control" value="{{blodTyoe}}" >
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<div class="col-xs-5">
+					<label class="control-label" for="mutual">Mutuelle:</label>  
+					<input id="mutual" name="mutual" type="text" class="form-control" value="{{mutual}}" >
+				</div>	
+			</div>
+			<div class="form-group">
+				<div class="col-xs-5">
+					<label class="control-label" for="emergency_contact_name">Personne a Contacter (urgence):</label>  
+					<input id="emergency_contact_name" name="emergency_contact_name" type="text" class="form-control" value="{{emergency_contact_name}}" >
+				</div>	
+			</div>
+			<div class="form-group">
+				<div class="col-xs-5">
+					<label class="control-label" for="emergency_contact_tel">Tel:</label>  
+					<input id="emergency_contact_tel" name="emergency_contact_tel" type="tel" class="form-control" value="{{emergency_contact_tel}}" >
+				</div>	
+			</div>
+			
+		</div>
+		<hr>
+        <div class="page2">
+		<h2>Pathalogie Medicale:</h2>
+			<div class="form-group">
+				<div class="col-xs-2">
+					<label class="control-label" for="cardio">Cardiaque</label>  
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="cardio" name="cardio" type="radio"  value="Yes">
+					<label>yes</label>
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="cardio" name="cardio" type="radio"  value="No">
+					<label>No</label>
+				</div>	
+				<div id="info" class="form-group col-xs-6">
+					<input type="text" id="cardio_info" name="cardio_info" class="form-control" value="{{cardio_info}}">  
+				</div>	
+			</div>
+		
+			<div class="form-group">
+				<div class="col-xs-2">
+					<label class="control-label" for="cardio">Pulmonaire</label>  
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="lung" name="lung" type="radio"  value="Yes">
+					<label>yes</label>
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="lung" name="lung" type="radio"  value="No">
+					<label>No</label>
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-2 clear-left">
+					<label class="control-label" for="cardio">Renale</label>  
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="kidney" name="kidneyv" type="radio"  value="yes">
+					<label>yes</label>
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="kidney" name="kidney" type="radio"  value="yes">
+					<label>No</label>
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-2 clear-left">
+					<label class="control-label" for="cardio">Digestive</label>  
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="digestive" name="digestive" type="radio"  value="yes">
+					<label>yes</label>
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="digestive" name="digestive" type="radio"  value="yes">
+					<label>No</label>
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-2 clear-left">
+					<label class="control-label" for="cardio">Neurologique</label>  
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="neurologic" name="neurologic" type="radio"  value="yes">
+					<label>yes</label>
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="neurologic" name="neurologic" type="radio"  value="yes">
+					<label>No</label>
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-2 clear-left">
+					<label class="control-label" for="cardio">Oculaire</label>  
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="eye" name="eye" type="radio"  value="yes">
+					<label>yes</label>
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="eye" name="eye" type="radio"  value="yes">
+					<label>No</label>
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<div class="col-xs-2 clear-left">
+					<label class="control-label" for="cardio">Cutanee</label>  
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="skin" name="skin" type="radio"  value="yes">
+					<label>yes</label>
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="skin" name="skin" type="radio"  value="yes">
+					<label>No</label>
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-2 clear-left">
+					<label class="control-label" for="cardio">Autre</label>  
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="other" name="other" type="radio"  value="yes">
+					<label>yes</label>
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="other" name="other" type="radio"  value="yes">
+					<label>No</label>
+				</div>	
+			</div>
+
+			<div class="form-group clear-left">
+				<div class="col-xs-2">
+					<label class="control-label" for="cardio">Allergie</label>  
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="allergy" name="allergy" type="radio"  value="yes">
+					<label>yes</label>
+				</div>	
+				<div class="radio-inline col-xs-1">	
+					<input id="allergy" name="allergy" type="radio"  value="yes">
+					<label>No</label>
+				</div>	
+				<div id="info" class="form-group col-xs-6">
+					<input type="text" id="allergy_info" name="allergy_info" class="form-control" value="{{allergy_info}}">  
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<div class="col-xs-10">
+					<label class="control-label" for="surgical_history">Antecedents Chirurgicaux:</label>  
+					<textarea id="surgical_history" name="surgical_history" row="2" class="form-control"  >{{surgical_history}}</textarea>
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<div class="col-xs-10">
+					<label class="control-label" for="surgical_history">Traitement Actuel:</label>  
+					<textarea id="current_treatment" name="current_treatment" row="2" class="form-control" > {{current_treatment}}</textarea>
+				</div>	
+			</div>
+
+		</div>
+        <div class="page3">
+			<h2>Exemen Clinique:</h2>
+			<div class="form-group">
+				<div class="col-xs-5">
+					<label class="control-label" for="CR_cardio">Cardiaque:</label>  
+					<input id="CR_cardio" name="CR_cardio" type="text" class="form-control" value="{{CR_cardio}}" >
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<div class="col-xs-5 clear-left">
+					<label class="control-label" for="CR_lung">Pulmonaire:</label>  
+					<input id="CR_lung" name="CR_lung" type="text" class="form-control" value="{{CR_lung}}" >
+				</div>	
+			</div>
+			<div class="form-group">
+				<div class="col-xs-5 clear-left">
+					<label class="control-label" for="CR_other">Autre:</label>  
+					<input id="CR_other" name="CR_other" type="text" class="form-control" value="{{CR_other}}" >
+				</div>	
+			</div>
+			<div class="form-group">
+				<div class="col-xs-5 clear-left">
+					<label class="control-label" for="CR_ta">TA:</label>  
+					<input id="CR_ta" name="CR_ta" type="text" class="form-control" value="{{CR_ta}}" >
+				</div>	
+			</div>
+			<div class="form-group">
+				<div class="col-xs-5 clear-left">
+					<label class="control-label" for="CR_pulse">Pouls:</label>  
+					<input id="CR_pulse" name="CR_pulse" type="text" class="form-control" value="{{CR_pulse}}" >
+				</div>	
+			</div>
+			<div class="form-group">
+				<div class="col-xs-5 clear-left">
+					<label class="control-label" for="CR_t">Temp:</label>  
+					<input id="CR_t" name="CR_t" type="text" class="form-control" value="{{CR_t}}" >
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<div class="col-xs-10">
+					<label class="control-label" for="examination">Examens Complementaires:</label>  
+					<textarea id="examination" name="examination" row="2" class="form-control"  >{{examination}}</textarea>
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-10">
+					<label class="control-label" for="diagnostic">Diagnostic:</label>  
+					<textarea id="diagnostic" name="diagnostic" row="2" class="form-control"  >{{diagnostic}}</textarea>
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-10">
+					<label class="control-label" for="treatment">Traitement Prescrit:</label>  
+					<textarea id="treatment" name="treatment" row="2" class="form-control"  >{{treatment}}</textarea>
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-10">
+					<label class="control-label" for="remarks">Remarques:</label>  
+					<textarea id="remarks" name="remarks" row="2" class="form-control">{{remarks}}</textarea>
+				</div>	
+			</div>
+			
+		</div>
+		<button class="btn btn-lg btn-primary " type="submit">Save</button>
+
+		</form>
+
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+    var emailRegex = /^\S+@\S+\.\S+$/;
+    $('form #email').on("blur", function() {
+      var p = $(this).parent();
+      if (emailRegex.test($(this).val())) {
+        p.removeClass('has-error');
+        p.addClass('has-success');
+        $(this).next('span').removeClass("glyphicon glyphicon-remove form-control-feedback");
+        $(this).next('span').addClass("glyphicon glyphicon-ok form-control-feedback");
+      }else {
+        p.removeClass('has-success');
+        p.addClass('has-error');
+        $(this).next('span').removeClass("glyphicon glyphicon-ok form-control-feedback");
+        $(this).next('span').addClass("glyphicon glyphicon-remove form-control-feedback");
+      }
+    });
+    
+    </script>
+    
+  </body>
+</html>
