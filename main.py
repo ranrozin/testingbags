@@ -4,6 +4,7 @@ import models
 import json
 import services
 import constants
+import logging
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import metadata
 from gaesessions import get_current_session
@@ -76,6 +77,7 @@ class loginHandler(baseHandler):
 					return
 			else:
 				path = os.path.join(os.path.dirname(__file__), 'templates\ind.html')
+				logging.debug(path)
 				params= {}
 				self.write(template.render(path,params))						
 		else:	
