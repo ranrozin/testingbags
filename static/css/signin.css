@@ -1,8 +1,6 @@
 html, body {
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding-bottom: 10px;
   background-color: #eee;
-  vertical-align: middle;
   height: 100%;
 }
 
@@ -15,9 +13,32 @@ label {
 	
 }
 .myhead {
-	float:right;
-	padding-right:21%;
+	padding: 1% 0 1% 1%;  
+	background-color: white;
 }
+.myhead a {
+	float: right;
+	margin: 20pt 5% 0 0;	
+}
+
+.form-search {
+	background-color: #2fa443;
+	min-height: 40pt;
+}
+.form-search  button{
+	background-color: #4fd766;
+	border-color: #4fd766;
+	color:white;
+}
+
+.form-search  button:hover{
+   background-color: #28e749;
+   color:white;
+}
+.search-page{
+	margin-bottom: 40pt;
+}
+
 .page1 ,.page2, .page3{
 	float: left;
 	margin-bottom: 1%;
@@ -39,7 +60,10 @@ label {
 	width:50%;
 	margin-top: 15px;
 	margin-bottom: 15px;
+	background-color: #4fd766;
+	border-color: #4fd766;
 } 	
+
 
 .myform .btn-cancel {
 	margin-left:15px;
@@ -51,16 +75,39 @@ label {
 .btn-cancel:hover {
 	background-color: lightgray;
 }
+.myform .btn-edit {
+	margin-left: 35px;
+	width: 65pt;
+	color: white;
+	margin-top: 14px;
+	background-color: #4fd766;
+	border-color: #4fd766;
+	font-size: 14px;
+} 	
+
+.myform .btn-edit:hover , .myform .btn-primary:hover{
+   background-color: #28e749;
+}
+
 .error {
 	color: red;
 	display: inline-block;
 }
-.form-search {
-  max-width: 300px;
-  padding: 15px;
-  margin: 0 auto;
-  vertical-align: middle;
+.error-page{
+	display: none;
+	color: lightgrey;
+	text-align: center;	
 }
+
+span.error-page {
+	border: 1px dotted black;
+}
+
+.welcome{
+	text-align:center;
+	vertical-align: middle;
+	margin-top: 75px;
+	}
 
 #card_id {
 	padding-bottom: 15px;

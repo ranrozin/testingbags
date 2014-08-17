@@ -117,19 +117,23 @@ class logoutHandler(baseHandler):
 		
 
 class newHandler(baseHandler):
-	def get (self):
+	def post (self):
 		session = get_current_session()
 		if session.is_active() == False:
-			self.redirect('/')
+			path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
+			params= {}
+			self.write(template.render(path,params))						
+			return
 		
-		path = os.path.join(os.path.dirname(__file__), 'templates/card.html')
-		params= {}
+		path = os.path.join(os.path.dirname(__file__), 'templates/cards.html')
+		card_id = self.request.get('ID','')
+		params= {"id":card_id}
+		
 		self.write(template.render(path,params))						
 		return
-
-class submitcardHandler(baseHandler):
+class savecardHandler(baseHandler):
 	"""
-	API name submit - get all form data and save it to the DB
+	API name save - get all form data of an existing crad and save it to the DB
 	It does rely on the client side to do some validation
 	"""
 	def post (self):
@@ -139,25 +143,66 @@ class submitcardHandler(baseHandler):
 			params= {}
 			self.write(template.render(path,params))						
 			return
+		path = os.path.join(os.path.dirname(__file__), 'templates/')
+		current_card = session['active_card']
+		if not (current_card and current_card != ''): # no active card - get out
+			parms = {"message":"no active card for save"} 
+			path_error = path + "error.html"
+			self.write(template.render(path,params))						
 		
+		ret_dict = {}
+		card = current_card.get()
+		m = self.request.params
+		res = populateValuesToCard(m, card)
+		if res == True:
+			card_key = card.put()
+			session['active_card'] = card_key
+			ret_dict["STATUS"] = "OK"		
+		else:
+			ret_dict["STATUS"] = "ERROR"
+			ret_dict["message"] = "failed to save card to DB"
+					
+		self.write(json.dumps(ret_dict))
+		
+		
+class submitcardHandler(baseHandler):
+	"""
+	API name submit - This is when a new card is added. get all form data and save it to the DB
+	It does rely on the client side to do some validation
+	"""
+	def post (self):
+		res = False
+		ret_dict= {}	
+		session = get_current_session()
+		if session.is_active() == False:
+			path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
+			params= {}
+			self.write(template.render(path,params))						
+			return
+		
+		email = self.request.get('email','')
+		id = self.request.get('id','')
+		cardExist = checkIfEmailOrIdExist(email, id)
+		if (cardExist == True or id == ''):
+			ret_dict["STATUS"] = "ERROR"
+			ret_dict["message"] = "Code patient ou Email déjà existant"
+			self.write(json.dumps(ret_dict))
+			return
+
+			
+		session['active_card'] = ''
 		card = models.Card()
 		m = self.request.params
-		for key, value in m.iteritems():
-			if hasattr(card,key):
-				if key == 'birth_date':
-					value = services.convertdateToDate(value)
-				elif key in['cardio', 'lung', 'kidney', 'digestive','neurologic' , 'eye',
-							'skin', 'other', 'allergy']:
-					value = services.convertToboolean(value)
-				elif key == 'CR_pulse':
-					value = services.convertToIntegerOrFloat(value, 'integer')
-				elif key == 'CR_t':
-					value = services.convertToIntegerOrFloat(value, 'float')
+		res = populateValuesToCard(m, card)
+		if res == True:
+			card_key = card.put()
+			session['active_card'] = card_key
+			ret_dict["STATUS"] = "OK"		
+		else:
+			ret_dict["STATUS"] = "ERROR"
+			ret_dict["message"] = "Une erreur est survenue pendant la sauvegarde, merci de réessayer"
 					
-					
-				setattr(card,key,value)
-				
-		card.put()
+		self.write(json.dumps(ret_dict))
 		
 class searchcardHandler(baseHandler):
 	"""
@@ -189,7 +234,7 @@ class searchcardHandler(baseHandler):
 		self.write(json.dumps({'STATUS':'error', 'ERR': 'no match'}))
 		return	
 					
-class gethcardHandler(baseHandler):
+class getcardHandler(baseHandler):
 	"""
 	API name get_card - This shoudl be called after the client verified that the card exist
 	
@@ -202,23 +247,67 @@ class gethcardHandler(baseHandler):
 			self.write(template.render(path,params))						
 			return
 		term = self.request.get('ID','')
-
-		path = os.path.join(os.path.dirname(__file__), 'templates/card.html')
+		session['active_card'] = '' # empty card session
+		path = os.path.join(os.path.dirname(__file__), 'templates/cards.html')
 		card = checkIfEmailExist(term, True ) 
 		if ( card ):
 			params = card.to_dict() 
+			params['existing_card'] = True
+			session['active_card'] = card.key # keeping track of card id
 			self.write(template.render(path,params))						
 			return	
 		card = checkIfIdExist( term, True)
 		if (card):
-			params = card.to_dict() 
+			params = card.to_dict()
+			params['existing_card'] = True
+			session['active_card'] = card.key # keeping track of card id
+			self.write(template.render(path,params))						
+			return
+		
+		self.write(json.dumps({'STATUS':'error', 'message': ' Pas de correspondance avec votre recherche'}))
+		return	
+
+class getCardForMobileHandler(baseHandler):
+	"""
+	API name getMobileCard - call with get and a resource, if found returns a mobile page
+	
+	"""
+	def get(self,uid):
+		params = {}
+		if not uid:
+			path = os.path.join(os.path.dirname(__file__), 'templates/mobile-error.html')
 			self.write(template.render(path,params))						
 			return
 
-		self.error(404)
-		return	
+		path = os.path.join(os.path.dirname(__file__), 'templates/mobile.html')
+		card_q = models.Card.query(models.Card.id == uid)
+		if card_q.count() < 1:
+			path = os.path.join(os.path.dirname(__file__), 'templates/mobile-error.html')
+			self.write(template.render(path,params))						
+			return
+		card = card_q.get()	
+		if card:
+			params = card.to_dict() 
+			self.write(template.render(path,params))						
+			return	
+		else:
+			path = os.path.join(os.path.dirname(__file__), 'templates/mobile-error.html')
+			self.write(template.render(path,params))						
+			return
+			
+		
+def checkIfEmailOrIdExist(email='', id = ''):
+	"""
+	check if email or ID exists
+	"""
+	email = checkIfEmailExist(email, False)
+	id = checkIfIdExist(id, False)
+	if (email or id):
+		return True
+	else:
+		return False
 
-
+		
 def checkIfEmailExist(term, getObject=False):
 	"""
 	check if ID exist in cards, if yes returns the object, if no return None
@@ -246,6 +335,32 @@ def checkIfIdExist(term, getObject=False):
 	else:
 		card = None
 	return card		 
+
+def populateValuesToCard(data, card):
+	string_for_error = ""
+	try:
+		for key, value in data.iteritems():
+			string_for_error = key + '  is : ' + value 	
+			if hasattr(card,key):
+				if key == 'birth_date':
+					value = services.convertdateToDate(value)
+				elif key in['cardio', 'lung', 'kidney', 'digestive','neurologic' , 'eye',
+							'skin', 'other', 'allergy']:
+					value = services.convertToboolean(value)
+				elif key == 'CR_pulse':
+					if value == '': value = 0 
+					value = services.convertToIntegerOrFloat(value, 'integer')
+				elif key == 'CR_t':
+					if value == '': value = 0 
+					value = services.convertToIntegerOrFloat(value, 'float')
+					
+					
+				setattr(card,key,value)
+	except:
+		logging.debug('we have an error with ' + string_for_error)
+		return False
+		
+	return True
 	
 app = webapp2.WSGIApplication(
     	[
@@ -253,8 +368,10 @@ app = webapp2.WSGIApplication(
 			('/logout?', logoutHandler),
 			('/new?', newHandler),
 			('/submit?', submitcardHandler),
+			('/save?', savecardHandler),
 			('/search?', searchcardHandler),
-			('/get_card?', gethcardHandler),
+			('/get_card?', getcardHandler),
+			('/getMobileCard/([^/]+)?', getCardForMobileHandler),
 			('/register?', registrationHandler)
     	],
                                          debug=True) 		

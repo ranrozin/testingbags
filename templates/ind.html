@@ -30,17 +30,17 @@
     <div class="container">
 
       <form class="form-signin" role="form" action="/login" method="post">
-        <h2 class="form-signin-heading">Doctor Login</h2>
+        <h2 class="form-signin-heading">Identification Docteur</h2>
 		<div id = "DE" class = "form-group has-feedback">
 			<input id="email" name="email" type="email" class="form-control" placeholder="Email address" required autofocus>
 			<span></span>
 		</div>
 		<input id = "password" name="password" type="password" class="form-control" placeholder="Password" required>
         <label class="checkbox">
-          <input type="checkbox" value="remember-me"> Remember me
+          <input type="checkbox" value="remember-me">Se souvenir de mes identifiants
         </label>
 		{% if ERROR %}<span>{{ERROR}}</span> {% endif %} 
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Se connecter</button>
       </form>
 
     </div> <!-- /container -->
