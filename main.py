@@ -5,31 +5,14 @@ import json
 import services
 import constants
 import logging
+import idfactory
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import metadata
 from gaesessions import get_current_session
 from google.appengine.ext.webapp import template
 
-class baseHandler(webapp2.RequestHandler):
-	"""
-	This is a baseHandler to for all classes which use webapp2, and includes variable checks
-	a short response and more
-	"""
-	def checkValues(self , *args):
-		res =  constants.STATUS_OK, 'All is good'
-		for a in args:
-			test = self.request.get(a,'')
-			if test == '':
-				res =  constants.MISSING_PARAMS, 'value %s was not recieved'%a
-				break
-		
-		return res	
-				
-	def write(self, text):
-		self.response.out.write(text)		
-			
 
-class registrationHandler(baseHandler):
+class registrationHandler(services.baseHandler):
 	def post (self):
 		res, message = self.checkValues('email','password')
 		if res != constants.STATUS_OK:
@@ -62,61 +45,49 @@ class registrationHandler(baseHandler):
 		self.write('all is OK')
 
 
-class loginHandler(baseHandler):
+class loginHandler(services.baseHandler):
 	def get(self):
 		"""
 		Load the login page and if there is a session go directly to the DR page
 		"""
-		session = get_current_session()
-		if session.is_active(): # we have a session but let check and see if email and password are OK
-			if session.has_key('email') and session.has_key('password'):
-				if models.MyDoctor.exist(session['email'].lower(), session['password'].lower()):			
-					email = session['email'] 
-					password = session['password']
-					self.redirect('static/search.html') 
-					return
-			else:
-				path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
-				logging.debug(path)
-				params= {}
-				self.write(template.render(path,params))						
-		else:	
-			path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
-			logging.debug(path)
-			params= {}
-			self.write(template.render(path,params))						
+		path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
+		logging.debug(path)
+		params= {}
+		self.write(template.render(path,params))						
 			  
 	def post(self):
-		res, message = self.checkValues('email','password')
+		res, message = self.checkValues('card_id','password')
+		path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
+		logging.debug('password = %s and card ID = %s'%(self.request.get('password',''),self.request.get('card_id','')))
 		if res != constants.STATUS_OK:
-			self.write(message)
-			return
-
-		session = get_current_session()
-		if models.MyDoctor.exist(self.request.get('email','').lower(), self.request.get('password','').lower()):			
-			session['email'] = self.request.get('email','').lower()
-			session['password'] = self.request.get('password','').lower()
-			self.redirect('static/search.html') 
+			params= {constants.STATUS_CODE : constants.ERROR, "ERROR_MESSAGE": "card ID or password are incorrect"}
+		#checking to see if passowrd on postcard matches and tag ID is in the DB	
+		elif not ( (self.request.get('password','') == constants.POSTCARD_CODE) and
+				(models.IDtable.exist(self.request.get('card_id','')) ) ):			
+			params= {constants.STATUS_CODE : constants.ERROR, "ERROR_MESSAGE": "card ID or password are incorrect"}
 		else:
-			path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
-			params= {"ERROR": "email or password are incorrect"}
-			self.write(template.render(path,params))						
+			card = services.getCard(self.request.get('card_id',''))
+			path = os.path.join(os.path.dirname(__file__), 'templates/card.html')
+			if not card:			   
+				params= {constants.STATUS_CODE : constants.STATUS_OK, "CARD": self.request.get('card_id','')}
+			else:
+				params = card.to_dict()
+				params['CARD'] = params['id'] 
+		self.write(template.render(path,params))									
 					
 		return	
+					
 
 
-class logoutHandler(baseHandler):
+class logoutHandler(services.baseHandler):
 	def get (self):
-		session = get_current_session()
-		if session.is_active(): # we have the credentials
-			session.terminate()
 
 		path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
 		params= {}
 		self.write(template.render(path,params))						
 		
 
-class newHandler(baseHandler):
+class newHandler(services.baseHandler):
 	def post (self):
 		session = get_current_session()
 		if session.is_active() == False:
@@ -131,7 +102,8 @@ class newHandler(baseHandler):
 		
 		self.write(template.render(path,params))						
 		return
-class savecardHandler(baseHandler):
+
+class savecardHandler(services.baseHandler):
 	"""
 	API name save - get all form data of an existing crad and save it to the DB
 	It does rely on the client side to do some validation
@@ -165,7 +137,7 @@ class savecardHandler(baseHandler):
 		self.write(json.dumps(ret_dict))
 		
 		
-class submitcardHandler(baseHandler):
+class submitcardHandler(services.baseHandler):
 	"""
 	API name submit - This is when a new card is added. get all form data and save it to the DB
 	It does rely on the client side to do some validation
@@ -173,38 +145,31 @@ class submitcardHandler(baseHandler):
 	def post (self):
 		res = False
 		ret_dict= {}	
-		session = get_current_session()
-		if session.is_active() == False:
-			path = os.path.join(os.path.dirname(__file__), 'templates/ind.html')
-			params= {}
-			self.write(template.render(path,params))						
-			return
 		
 		email = self.request.get('email','')
 		id = self.request.get('id','')
 		cardExist = checkIfEmailOrIdExist(email, id)
 		if (cardExist == True or id == ''):
-			ret_dict["STATUS"] = "ERROR"
-			ret_dict["message"] = "Code patient ou Email déjà existant"
+			ret_dict[constants.STATUS_CODE] = constants.ERROR
+			ret_dict["MESSAGE"] = "Code patient ou Email  existant"
 			self.write(json.dumps(ret_dict))
 			return
 
 			
-		session['active_card'] = ''
 		card = models.Card()
 		m = self.request.params
 		res = populateValuesToCard(m, card)
 		if res == True:
 			card_key = card.put()
-			session['active_card'] = card_key
-			ret_dict["STATUS"] = "OK"		
+			#session['active_card'] = card_key
+			ret_dict[constants.STATUS_CODE] = constants.STATUS_OK		
 		else:
-			ret_dict["STATUS"] = "ERROR"
-			ret_dict["message"] = "Une erreur est survenue pendant la sauvegarde, merci de réessayer"
+			ret_dict[constants.STATUS_CODE] = constants.ERROR
+			ret_dict["MESSAGE"] = "Une erreur est survenue pendant la sauvegarde, merci de ressayer"
 					
 		self.write(json.dumps(ret_dict))
 		
-class searchcardHandler(baseHandler):
+class searchcardHandler(services.baseHandler):
 	"""
 	API name search - This is used via ajax, it get a search phrase
 	and will look in id and email to see if it can match one
@@ -234,7 +199,7 @@ class searchcardHandler(baseHandler):
 		self.write(json.dumps({'STATUS':'error', 'ERR': 'no match'}))
 		return	
 					
-class getcardHandler(baseHandler):
+class getcardHandler(services.baseHandler):
 	"""
 	API name get_card - This shoudl be called after the client verified that the card exist
 	
@@ -267,7 +232,7 @@ class getcardHandler(baseHandler):
 		self.write(json.dumps({'STATUS':'error', 'message': ' Pas de correspondance avec votre recherche'}))
 		return	
 
-class getCardForMobileHandler(baseHandler):
+class getCardForMobileHandler(services.baseHandler):
 	"""
 	API name getMobileCard - call with get and a resource, if found returns a mobile page
 	
@@ -326,7 +291,7 @@ def checkIfIdExist(term, getObject=False):
 	"""
 	check if ID exist in cards, if yes returns the object, if no return None
 	"""
-	card_q = models.Card.query(models.Card.id == term.lower())
+	card_q = models.Card.query(models.Card.id == term)
 	if card_q.count() > 0:
 		if getObject == True: 
 			card = card_q.get()
@@ -372,7 +337,9 @@ app = webapp2.WSGIApplication(
 			('/search?', searchcardHandler),
 			('/get_card?', getcardHandler),
 			('/getMobileCard/([^/]+)?', getCardForMobileHandler),
-			('/register?', registrationHandler)
+			('/register?', registrationHandler),
+			('/admin/createID?',idfactory.CreateIDHandler),
+			('/admin/createIDTQ', idfactory.CreateIDHandlerTQ)
     	],
                                          debug=True) 		
 

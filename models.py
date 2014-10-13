@@ -17,8 +17,21 @@ class MyDoctor (ndb.Model):
         else:
             return False    
         
+class IDtable(ndb.Model): 
+	id = ndb.StringProperty()
+	isActive = ndb.BooleanProperty(default=False)
+	last_change = ndb.DateTimeProperty(auto_now = True)
+	share_info = ndb.BooleanProperty(default=False)
+	
+	@classmethod
+	def exist(cls,ID):
+		qry = cls.query().filter(IDtable.id == ID)
+		if qry.count() > 0:
+			return True
+		else:
+			return False    
 
-
+		
 class RegistrationSession(ndb.Model):    
     user = ndb.KeyProperty(MyDoctor, "registration") 
     last_login = ndb.DateTimeProperty(auto_now_add=True)
@@ -30,6 +43,7 @@ class Session(ndb.Model):
         
 class Card(ndb.Model):
     id = ndb.StringProperty()
+    id_link = ndb.KeyProperty(IDtable, "cards")
     fName = ndb.StringProperty()
     lName = ndb.StringProperty()
     address = ndb.StringProperty()

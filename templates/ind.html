@@ -32,14 +32,14 @@
       <form class="form-signin" role="form" action="/login" method="post">
         <h2 class="form-signin-heading">Identification Docteur</h2>
 		<div id = "DE" class = "form-group has-feedback">
-			<input id="email" name="email" type="email" class="form-control" placeholder="Email address" required autofocus>
+			<input id="card_id" name="card_id" type="text" class="form-control" placeholder="Card ID" required autofocus>
 			<span></span>
 		</div>
 		<input id = "password" name="password" type="password" class="form-control" placeholder="Password" required>
         <label class="checkbox">
-          <input type="checkbox" value="remember-me">Se souvenir de mes identifiants
+          <!--<input type="checkbox" value="remember-me">Se souvenir de mes identifiants -->
         </label>
-		{% if ERROR %}<span>{{ERROR}}</span> {% endif %} 
+		{% if ERROR_MESSAGE %}<span>{{ERROR_MESSAGE}}</span> {% endif %} 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Se connecter</button>
       </form>
 
@@ -52,8 +52,8 @@
 	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script>
-	var emailRegex = /^\S+@\S+\.\S+$/;
-	$('form #email').on("blur", function() {
+	var emailRegex = /^[a-zA-Z0-9_]*$/;
+	$('form #card_id').on("blur", function() {
 	  var p = $(this).parent();
 	  if (emailRegex.test($(this).val())) {
 		p.removeClass('has-error');

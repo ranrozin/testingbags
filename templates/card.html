@@ -30,7 +30,6 @@
 	  <div class="myhead">
 		<a href="/logout">Logout</a>
 	  </div>
-
 	<div class="container">
 	  
       <form class="myform" role="form" action="/submit" method="post">
@@ -39,10 +38,10 @@
 			<div class="form-group">
 				<div id="card_id" class="col-xs-5 ">
 					<label class="control-label" for="id">Card ID:</label>  
-					<input id="id" name="id" type="text" class="form-control" value="{{id}}" required>
+					<input id="id" name="id" type="text" class="form-control" value="{{CARD}}"  readonly>
 				</div>	
 			</div>
-			<button class="btn btn-lg btn-edit">Edit</button>
+			<!--<button class="btn btn-lg btn-edit">Edit</button>-->
 			<div class="form-group">
 				<div class="col-xs-5 clear-left">
 					<label class="control-label" for="fName">Nom:</label>  
@@ -369,6 +368,22 @@
 		
 
 		</form>
+<div class="modal fade bs-example-modal-sm">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Erreur</h4>
+      </div>
+      <div class="modal-body">
+        <p></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->    <!-- Bootstrap core JavaScript
 
 
     </div> <!-- /container -->
@@ -381,15 +396,15 @@
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script>
 	$( document ).ready(function() {
-		alert ("ready");
-		makeFormDisable();
+		//makeFormDisable();
 	});
 	$('.btn-cancel').on('click', function() {
 		window.location.replace('/login');
 	});
 	
-	$('.btn-edit').on('click', makeFormEnable());
-	
+	//$('.btn-edit').on('click', makeFormEnable());
+		
+		
 	function makeFormDisable() {
 		$("form input, form textarea, form input:radio").each(function()
 			{
@@ -400,7 +415,6 @@
 	}
 	
 	function makeFormEnable() {
-		alert ("makeFormEnable");
 		$("form input, form textarea, form input:radio").each(function()
 			{
 			if (this.nodeName == "INPUT" || this.nodeName == "TEXTAREA" || this.nodeName == "RADIO" ){ 
@@ -408,6 +422,56 @@
 			} 
 		})
 	}
+		
+	$('.myform :button').on('click', function(et) { 
+		if ($(this).html == "Cancel" ) {
+			window.location.replace('/login')
+		}
+	})
+	
+	// getting user out to login, after successfuly saving the card
+	$('.modal').on('hidden.bs.modal', function (e) {
+		console.log(e);
+		if ( $(e.target).find('.modal-title').html() == 'Success'){
+			window.location.replace('/login');
+		}
+	})
+	
+	$('.myform :submit').on('click', function(et) { 
+		et.preventDefault();
+		var btn = $(this);
+		btn.button('saving');
+		var url = "/submit"; // the script where you handle the form input.
+		var data_to_send = $('.myform').serialize();
+		var search = $.post(url,data_to_send);
+		search.done (function(data) {
+		  try {
+			d = $.parseJSON(data) ; // errors are in the from of a JSON, if this failes it will load teh html
+		    if (d.STATUS_CODE != 0) {
+				$('.modal-title').empty().html('Erreur');
+		    	$('.modal-body p').empty().html(d.MESSAGE);
+		    	$('.modal').modal('show');
+			} else {
+				$('.modal-title').empty().html('Success');
+		    	$('.modal-body p').empty().html('Record was saved successfully');
+		    	$('.modal').modal('show');
+			}
+		  } catch (e) {
+			  $('.modal-title').empty().html('Erreur');
+			  $('.modal-body p').empty().html('Echec de la communication avec les serveurs - error catch');
+			  $('.modal').modal('show');	
+		  }
+		})
+		search.fail(function(data) {
+		  $('.modal-title').empty().html('Erreur');
+		  $('.modal-body p').empty().html('Echec de la communication avec les serveurs');
+		  $('.modal').modal('show');	
+		})
+		search.always(function(data) {
+		  btn.button('reset');	
+		})
+	})
+	
     </script>
     
   </body>
