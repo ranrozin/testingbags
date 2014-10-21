@@ -1,6 +1,6 @@
-﻿<!DOCTYPE HTML>
+<!DOCTYPE HTML>
   <head>
-    <title>tag-a-bag</title>
+    <title>La carte santé</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
 	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
@@ -97,7 +97,7 @@ textarea {
 </style>
 <html>
 <body>
-<div id="wrap">
+<!--<div id="wrap"> -->
   
     <nav class="navbar navbar-default" role="navigation">
       <div class="navbar-header text-center">
@@ -113,88 +113,80 @@ textarea {
 			<div class="row">
 			<label class="col-xs-3 label-name">Nom:</label> <label class="col-xs-9 label-value">{{fName}} {{lName}}</label> 
 			</div>
-			<div class="row">
-			<label class="col-xs-3 label-name">Addresse:</label> <label class="col-xs-9 label-value">{{address}}</label> 
+			<!--<div class="row">
+			<label class="col-xs-3 label-name">Adresse:</label> <label class="col-xs-9 label-value">{{address}}</label> 
 			</div>
 			<div class="row">
-			<label class="col-xs-3 label-name">Tel Domicile:</label> <label class="col-xs-9 label-value">{{tel_home}}</label> 
+			<label class="col-xs-6 label-name">Tél Domicile:</label> <label class="col-xs-6 label-value">{{tel_home}}</label> 
 			</div>
 			<div class="row">
 			<label class="col-xs-3 label-name">Email:</label> <label class="col-xs-9 label-value">{{email}}</label> 
-			</div>
+			</div> -->
 			<div class="row">
-			<label class="col-xs-5 label-name"><span style="font-weight:bold">Personne a Contacter (urgence)</span>:</label> <label class="col-xs-7 label-value">{{emergency_contact_name}}</label> 
+			<label class="col-xs-7 label-name"><span style="font-weight:bold">Personne à contacter (urgence)</span>:</label> <label class="col-xs-5 label-value">{{emergency_contact_name}}</label> 
 			</div>
 		</div>
 	  </div>
-	  <div class="panel panel-danger">
-	    <div class="panel-heading">Pathalogie Medicale</div>
+	 
+	  <div class="panel panel-primary">
+	    <div class="panel-heading">Informations</div>
 		  <div class="panel-body">
+			<div class="row">
+			<label class="col-xs-4 label-name">Groupe Sanguin:</label> <label class="col-xs-8 label-value">{{blodTyoe}}</label> 
+			</div>
+			<div class="row">
+			<label class="col-xs-4 label-name"><span style="font-weight:bold">Médecin Référent Dr.</span>:</label> <label class="col-xs-8 label-value">{{ref_doctor_name}}</label> 
+			</div>
+		</div>
+	  </div>
+	  
+	  
+	  <div class="panel panel-danger">
+	    <div class="panel-heading">Pathologie</div>
+		  <div class="panel-body">
+			{% if cardio %}			
 			<div class="row">	
 				<label class="col-xs-4 label-name">Cardiaque:</label>
-				{% if cardio %}			
 				  <label class="col-xs-2 label-value">Oui</label>
 				  <textarea rows="1" readonly class="col-xs-5" id="cardio_info" name="cardio_info"> "{{cardio_info}}</textarea> 
-				{% else %}
-				  <label class="col-xs-8 label-value">Non</label>
-				{% endif %}
 			</div>
+			{% endif %}
+			{% if lung %}
 			<div class="row">
 				<label class="col-xs-4 label-name">Pulmonaire:</label> 
-				{% if lung %}
 				  <label class="col-xs-8 label-value">Oui</label>
-				{% else %}
-				  <label class="col-xs-8 label-value">Non</label>
-				{% endif %}
 			</div>
+			{% endif %}
+			{% if kidney %}
 			<div class="row">
 				<label class="col-xs-4 label-name">Renale:</label>
-				{% if kidney %}
 				  <label class="col-xs-8 label-value">Oui</label>
-				{% else %}
-				  <label class="col-xs-8 label-value">Non</label>
-				{% endif %}
 			</div>
+			{% endif %}
+			{% if digestive %}
 			<div class="row">
 				<label class="col-xs-4 label-name">Digestive:</label>
-				{% if digestive %}
 				  <label class="col-xs-8 label-value">Oui</label>
-				{% else %}
-				  <label class="col-xs-8 label-value">Non</label>
-				{% endif %}
 			</div>
+			{% endif %}
+			{% if neurologic %}
 			<div class="row">
 				<label class="col-xs-4 label-name">Neurologique:</label>
-				{% if neurologic %}
 				  <label class="col-xs-8 label-value">Oui</label>
-				{% else %}
-				  <label class="col-xs-8 label-value">Non</label>
-				{% endif %}
 			</div>
+			{% endif %}
+			{% if eye %}
 			<div class="row">
 				<label class="col-xs-4 label-name">Oculaire:</label>
-				{% if eye %}
 				  <label class="col-xs-8 label-value">Oui</label>
-				{% else %}
-				  <label class="col-xs-8 label-value">Non</label>
-				{% endif %}
 			</div>
+			{% endif %}
+			{% if skin %}
 			<div class="row">
-				<label class="col-xs-4 label-name">Cutanee:</label>
-				{% if skin %}
+				<label class="col-xs-4 label-name">Cutanée:</label>
 				  <label class="col-xs-8 label-value">Oui</label>
-				{% else %}
-				  <label class="col-xs-8 label-value">Non</label>
-				{% endif %}
 			</div>
-			<div class="row">
-				<label class="col-xs-4 label-name">Autre</label>
-				{% if other %}
-				  <label class="col-xs-8 label-value">Oui</label>
-				{% else %}
-				  <label class="col-xs-8 label-value">Non</label>
-				{% endif %}
-			</div>
+			{% endif %}
 			<div class="row">
 				<label class="col-xs-4 label-name">Allergie:</label>
 				{% if allergy %}	
@@ -204,6 +196,13 @@ textarea {
 				  <label class="col-xs-8 label-value">Non</label>
 				{% endif %}
 			</div>	
+			{% if other %}
+			<div class="row">
+				<label class="col-xs-4 label-name">Autre</label>
+				  <label class="col-xs-2 label-value">Oui</label>
+				  <textarea readonly class="col-xs-5 input-group" rows="1" id="other_info" name="cardio_info"> {{other_info}}</textarea> 
+			</div>
+			{% endif %}
 		</div>
 	  </div> 
     </div>
@@ -211,13 +210,13 @@ textarea {
 <div id="footer">
   <div class="col-xs-12  navbar-fixed-bottom">
 	  <div class="row" id="bottomNav">
-	   <div class="label-name">Personne a Contacter (urgence)</div>
+	   <div class="label-name">Personne à contacter (urgence)</div>
 		<div class="col-xs-12">
-			<a href="tel:0545928600"><i class="glyphicon glyphicon-phone-alt"></i>  {{emergency_contact_tel}}</a>
+			<a href="tel:0622044044"><i class="glyphicon glyphicon-phone-alt"></i>  {{emergency_contact_tel}}</a>
 		</div>
 	  </div>
 	</div>
 </div>
-</div>
+<!--</div> -->
 </body>
 </html>

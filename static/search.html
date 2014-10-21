@@ -91,7 +91,7 @@
   if ( et.target.id == "search" ) { // The search field was clicked
     if ( $('#ID').val().length < 3) {
       $('.modal-title').empty().html('Erreur');
-	  $('.modal-body p').empty().html('le code patient doit avoir au minimum 5 caractères');
+	  $('.modal-body p').empty().html('le code patient doit avoir au minimum 5 caractÃ¨res');
 	  $('.modal').modal('show');	
       return;
 	}
@@ -144,7 +144,7 @@
     })
   } else {
 	  $('.modal-title').empty().html('Erreur');
-      $('.modal-body p').empty().html('Erreur, nous n’avons d’informations complémentaires');
+      $('.modal-body p').empty().html('Erreur, nous nâ€™avons dâ€™informations complÃ©mentaires');
 	  $('.modal').modal('show');	
   
   };	
@@ -176,7 +176,7 @@ $(".existing-card, .new").on("click", ":button", function(et) {
 		}		
       } catch (e) {
           $('.modal-title').empty().html('Erreur');
-		  $('.modal-body p').empty().html('Une erreur est survenue pendant la sauvegarde, merci de réessayer');
+		  $('.modal-body p').empty().html('Une erreur est survenue pendant la sauvegarde, merci de rÃ©essayer');
 	      $('.modal').modal('show');	
 	  }
     })

@@ -1,5 +1,5 @@
 application: testingbags
-version: 1-3
+version: 1-4
 runtime: python27
 api_version: 1
 threadsafe: yes
@@ -23,5 +23,11 @@ handlers:
 - url: /static
   static_dir: static
   
-- url: .*
+- url: /admin/createIDTQ
+  script: main.app
+  secure: always
+  login: admin
+
+  
+- url: /.*
   script: main.app

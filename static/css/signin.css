@@ -169,3 +169,7 @@ hr {
 .has-feedback .form-control-feedback {
 	line-height : 0px;
 	}
+.form-group.required .control-label:after { 
+   content:"*";
+   color:red;
+}
