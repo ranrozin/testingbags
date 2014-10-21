@@ -1,0 +1,216 @@
+ï»¿
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <title>Tags Management </title>
+
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+	  <div class="myhead">
+	  <img src="images/logo.png" height="50">
+		<a href="/logout">DÃ©connexion</a>
+	  </div>
+
+   <div class="search-page">
+	<div class="form-search">
+	  <form class="navbar-form navbar-left" role="search" method="post">
+	    <div class="form-group">
+	      <input id="ID" name="ID"  type="text" class="form-control" placeholder="Search">
+	    </div>
+        <button id="search" name="search" type="button" data-loading-text="Searching..." class="btn btn-default" value="search"> Rechercher par code patient</button>
+        <button id="new" name="new" type="button" class="btn btn-default" value="new">Nouveau code patient</button>
+		
+       </form>
+	</div>   
+	<div class="helper"></div>
+	<div class="welcome">
+		<img src="images/watermark.png" width="380">
+	</div>
+
+   </div> <!-- /search section -->
+   <div class="new"> <!-- /container for data to be filled via ajax for new card-->
+   </div>
+   <div class="existing-card"> <!-- /container for data to be filled via ajax for existing card-->
+   </div>
+   <div class="error-page"> <!-- /container for error message-->
+	<div class="container">
+	  <h1> <span class="err-message"></span></h1>
+    </div>
+   </div>
+   
+<div class="modal fade bs-example-modal-sm">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Erreur</h4>
+      </div>
+      <div class="modal-body">
+        <p></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->    <!-- Bootstrap core JavaScript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<script>
+// This section is for the
+  $('.navbar-form :input:button').on('click', function(et) { 
+  /*
+  I didn't find a nice way to have an ajax call on teh submit button, so the way I did it was to
+  do an ajax call to check if record exist, if yes, to repleace body, if not, the srevre returns error 202
+  */
+  event.preventDefault();
+  $('.welcome').hide();
+  if ( et.target.id == "search" ) { // The search field was clicked
+    if ( $('#ID').val().length < 3) {
+      $('.modal-title').empty().html('Erreur');
+	  $('.modal-body p').empty().html('le code patient doit avoir au minimum 5 caractères');
+	  $('.modal').modal('show');	
+      return;
+	}
+	var btn = $(this);
+	btn.button('loading');
+	var url = "/get_card"; // the script where you handle the form input.
+    var term = $('#ID').val();
+    var search = $.post(url,{ID: term});
+    search.done (function(data) {
+      try {
+        d = $.parseJSON(data) ; // errors are in the from of a JSON, if this failes it will load teh html
+		$('.existing-card').empty();
+		$('.new').empty();
+		$('.error-page .err-message').empty().html(d.message);
+		$('.error-page').show()
+      } catch (e) {
+		$('.new').empty();
+        $('.error-page').hide()
+		$('.existing-card').empty().html(data);
+		makeFormDisable();
+	  }
+    })
+    search.fail(function(data) {
+	  $('.modal-title').empty().html('Erreur');
+      $('.modal-body p').empty().html('Echec de la communication avec les serveurs');
+	  $('.modal').modal('show');	
+    })
+    search.always(function(data) {
+      btn.button('reset');	
+    })
+  } else if (et.target.id == "new") { // The new button was clicked
+	var url = "/new"; // the script where you handle the form input.
+    var term = $('#ID').val();
+    var new_card = $.post(url,{ID: term});
+    new_card.done (function(data) {
+      try {
+        d = $.parseJSON(data);
+	    alert ("error: " + d.ERR);
+		$('.existing-card').empty();
+		$('.new').empty();
+      } catch (e) {
+		$('.existing-card').empty();
+        $('.new').empty().html(data);
+      }
+    })
+    new_card.fail(function(data) {
+	  $('.modal-title').empty().html('Erreur');
+      $('.modal-body p').empty().html('Echec de la communication avec les serveurs');
+	  $('.modal').modal('show');	
+    })
+  } else {
+	  $('.modal-title').empty().html('Erreur');
+      $('.modal-body p').empty().html('Erreur, nous n’avons d’informations complémentaires');
+	  $('.modal').modal('show');	
+  
+  };	
+}) 
+// I use the delegate from of .on() becuase the content is loaded via ajax
+
+
+$(".existing-card, .new").on("click", ":button", function(et) {
+  event.preventDefault(); 
+  if (et.target.id == "edit") {
+    makeFormEnable();
+  } else  {
+    var name = et.target.id;
+	var url = "/" + name ; // the script where you handle the form input.
+	var form_data = $('.myform').serialize()
+    var submit_form = $.post(url,form_data)
+    submit_form.done (function(data) {
+      try {
+        d = $.parseJSON(data) ; // errors are in the from of a JSON, if this failes it will load teh html
+		if (d.STATUS == "OK") {
+		  $('.modal-title').empty().html('Success')
+          $('.modal-body p').empty().html('Record was saved successfully');
+	      $('.modal').modal('show');	
+			makeFormDisable();
+		} else{ 
+		  $('.modal-title').empty().html('Erreur');
+          $('.modal-body p').empty().html(d.message);
+	      $('.modal').modal('show');	
+		}		
+      } catch (e) {
+          $('.modal-title').empty().html('Erreur');
+		  $('.modal-body p').empty().html('Une erreur est survenue pendant la sauvegarde, merci de réessayer');
+	      $('.modal').modal('show');	
+	  }
+    })
+    submit_form.fail(function(data) {
+      $('.modal-title').empty().html('Erreur');
+	  $('.modal-body p').empty().html('Echec de la communication avec les serveurs');
+	  $('.modal').modal('show');	
+    })
+  }
+})	
+
+
+
+function makeFormDisable() {
+  $(".existing-card :input").each(function() {
+    if (this.nodeName == "INPUT" || this.nodeName == "TEXTAREA" || this.nodeName == "RADIO" ){ 
+      $(this).prop('disabled','disabled') 
+	  $(this).css("background-color", "lightgoldenrodyellow")
+    } 
+  })
+}
+
+function makeFormEnable() {
+  $(".existing-card :input").each(function() {
+    if (this.nodeName == "INPUT" || this.nodeName == "TEXTAREA" || this.nodeName == "RADIO" ){ 
+      $(this).prop('disabled','') 
+	  $(this).css("background-color", "white")
+    } 
+  })
+}
+	
+		
+	
+    </script>
+    
+  </body>
+</html>
