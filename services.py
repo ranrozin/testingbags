@@ -80,7 +80,7 @@ def getCard(card_id=''):
 	When a tag is activated the active tag should be set to True
 	"""
 	card = None
-	q = models.Card.query(models.Card.id == card_id)
+	q = models.Card.query(models.Card.id == card_id.upper())
 	if q and q.count > 0:
 		card = q.get()
 	return card

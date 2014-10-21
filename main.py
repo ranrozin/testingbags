@@ -62,7 +62,7 @@ class loginHandler(services.baseHandler):
 		if res != constants.STATUS_OK:
 			params= {constants.STATUS_CODE : constants.ERROR, "ERROR_MESSAGE": "card ID or password are incorrect"}
 		#checking to see if passowrd on postcard matches and tag ID is in the DB	
-		elif not ( (self.request.get('password','') == constants.POSTCARD_CODE) and
+		elif not ( (self.request.get('password','').upper() == constants.POSTCARD_CODE) and
 				(models.IDtable.exist(self.request.get('card_id','')) ) ):			
 			params= {constants.STATUS_CODE : constants.ERROR, "ERROR_MESSAGE": "card ID or password are incorrect"}
 		else:
@@ -329,17 +329,20 @@ def populateValuesToCard(data, card):
 	
 app = webapp2.WSGIApplication(
     	[
+			#('/(^A{2}.*)', getCardForMobileHandler),
 			('/login?', loginHandler),
+			('/getMobileCard/([^/]+)?', getCardForMobileHandler),
 			('/logout?', logoutHandler),
 			('/new?', newHandler),
 			('/submit?', submitcardHandler),
 			('/save?', savecardHandler),
 			('/search?', searchcardHandler),
 			('/get_card?', getcardHandler),
-			('/getMobileCard/([^/]+)?', getCardForMobileHandler),
 			('/register?', registrationHandler),
 			('/admin/createID?',idfactory.CreateIDHandler),
-			('/admin/createIDTQ', idfactory.CreateIDHandlerTQ)
+			('/admin/createIDTQ', idfactory.CreateIDHandlerTQ),
+			('/(A{2}.*)', getCardForMobileHandler),
+			('/', loginHandler),
     	],
                                          debug=True) 		
 

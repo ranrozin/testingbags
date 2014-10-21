@@ -25,7 +25,7 @@ class IDtable(ndb.Model):
 	
 	@classmethod
 	def exist(cls,ID):
-		qry = cls.query().filter(IDtable.id == ID)
+		qry = cls.query().filter(IDtable.id == ID.upper())
 		if qry.count() > 0:
 			return True
 		else:
@@ -69,6 +69,7 @@ class Card(ndb.Model):
     eye = ndb.BooleanProperty(default = False)
     skin = ndb.BooleanProperty(default = False)
     other = ndb.BooleanProperty(default = False)
+    other_info = ndb.StringProperty()
     allergy = ndb.BooleanProperty(default = False)
     allergy_info = ndb.StringProperty()
     

@@ -29,5 +29,5 @@ handlers:
   login: admin
 
   
-- url: .*
+- url: /.*
   script: main.app
