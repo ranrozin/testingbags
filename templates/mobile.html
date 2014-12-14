@@ -83,9 +83,12 @@ body {
 }
 
 textarea {
-	border-radius: 4px;
-	border: dashed 1px green;
+	/*border-radius: 4px;
+	border: dashed 1px green; */
 	background-color: none;
+	border: 0;
+	resize: none;
+	margin-bottom: 5px;	
 	
 }
 
@@ -106,49 +109,56 @@ textarea {
     </nav>
   
   <!-- Begin page content -->
-  <div class="container">
 	  <div class="panel panel-primary">
 	    <div class="panel-heading">Informations personnelles</div>
 		  <div class="panel-body">
 			<div class="row">
-			<label class="col-xs-3 label-name">Nom:</label> <label class="col-xs-9 label-value">{{fName}} {{lName}}</label> 
+			<label class="col-xs-4 label-name">NOM:</label> <label class="col-xs-8 label-value">{{lName}}</label> 
+			</div>
+			<div class="row">
+			<label class="col-xs-4 label-name">PERNOM:</label> <label class="col-xs-8 label-value">{{fName}} </label> 
+			</div>
+			<div class="row">
+			<label class="col-xs-4 label-name">NELE:</label> <label class="col-xs-8 label-value">{{birth_date}}</label> 
+			</div>
+			<div class="row">
+			<label class="col-xs-4 label-name">Tél.:</label> <label class="col-xs-8 label-value">{{tel_home}}</label> 
+			</div>
+			<div class="row">
+			<label class="col-xs-4 label-name">GROUPE SANGUIN:</label> <label class="col-xs-8 label-value">{{blodType}}</label> 
 			</div>
 			<!--<div class="row">
-			<label class="col-xs-3 label-name">Adresse:</label> <label class="col-xs-9 label-value">{{address}}</label> 
-			</div>
-			<div class="row">
-			<label class="col-xs-6 label-name">Tél Domicile:</label> <label class="col-xs-6 label-value">{{tel_home}}</label> 
-			</div>
-			<div class="row">
-			<label class="col-xs-3 label-name">Email:</label> <label class="col-xs-9 label-value">{{email}}</label> 
-			</div> -->
-			<div class="row">
-			<label class="col-xs-4 label-name"><span style="font-weight:bold">Personne à contacter</span>:</label> <label class="col-xs-8 label-value">{{emergency_contact_name}}</label> 
+			<label class="col-xs-3 label-name"><span style="font-weight:bold">Urgence</span>:</label> <label class="col-xs-9 label-value">{{emergency_contact_name}}</label> -->
 			</div>
 		</div>
-	  </div>
 	 
 	  <div class="panel panel-primary">
-	    <div class="panel-heading">Informations</div>
+	    <div class="panel-heading">Informations Générales</div>
 		  <div class="panel-body">
 			<div class="row">
-			<label class="col-xs-4 label-name">Groupe Sanguin:</label> <label class="col-xs-8 label-value">{{blodTyoe}}</label> 
+			<label class="col-xs-4 label-name"><span style="font-weight:bold">MEDICIN TARAITANT:</span>:</label> <label class="col-xs-8 label-value">						{{ref_doctor_name}}</label> 
 			</div>
 			<div class="row">
-			<label class="col-xs-4 label-name"><span style="font-weight:bold">Médecin</span>:</label> <label class="col-xs-8 label-value">{{ref_doctor_name}}</label> 
+			<label class="col-xs-4 label-name">Tél.:</label> <label class="col-xs-8 label-value">{{ref_doctor_tel}}</label> 
+			</div>
+			<div class="row">
+			<label class="col-xs-4 label-name"><span style="font-weight:bold">PERSAONNE DE CONFIDENCE:</span>:</label> <label class="col-xs-8 label-value">						{{emergency_contact_name}}</label> 
+			</div>
+			<div class="row">
+			<label class="col-xs-4 label-name">Tél.:</label> <label class="col-xs-8 label-value">{{emergency_contact_tel}}</label> 
 			</div>
 		</div>
 	  </div>
 	  
 	  
-	  <div class="panel panel-danger">
-	    <div class="panel-heading">Pathologie</div>
+	  <div class="panel panel-primary">
+	    <div class="panel-heading">ANTECEDENTS MEDICAUX</div>
 		  <div class="panel-body">
 			{% if cardio %}			
 			<div class="row">	
 				<label class="col-xs-4 label-name">Cardiaque:</label>
 				  <label class="col-xs-2 label-value">Oui</label>
-				  <textarea rows="1" readonly class="col-xs-5" id="cardio_info" name="cardio_info"> "{{cardio_info}}</textarea> 
+				  <textarea rows="1" readonly class="col-xs-5" id="cardio_info" name="cardio_info">{{cardio_info}}</textarea> 
 			</div>
 			{% endif %}
 			{% if lung %}
@@ -187,30 +197,77 @@ textarea {
 				  <label class="col-xs-8 label-value">Oui</label>
 			</div>
 			{% endif %}
-			<div class="row">
-				<label class="col-xs-4 label-name">Allergie:</label>
-				{% if allergy %}	
-				  <label class="col-xs-2 label-value">Oui</label>
-				  <textarea readonly class="col-xs-5 input-group" rows="1" id="cardio_info" name="cardio_info"> {{allergy_info}}</textarea> 
-				{% else %}
-				  <label class="col-xs-8 label-value">Non</label>
-				{% endif %}
-			</div>	
 			{% if other %}
 			<div class="row">
 				<label class="col-xs-4 label-name">Autre</label>
 				  <label class="col-xs-2 label-value">Oui</label>
-				  <textarea readonly class="col-xs-5 input-group" rows="1" id="other_info" name="cardio_info"> {{other_info}}</textarea> 
+				  <textarea readonly class="col-xs-5 input-group" rows="1" id="other_info" name="cardio_info">{{other_info}}</textarea> 
 			</div>
 			{% endif %}
 		</div>
 	  </div> 
-    </div>
+    
+    
+	  <div class="panel panel-primary">
+	    <div class="panel-heading">ANTECEDENTS MEDICAUX</div>
+		  <div class="panel-body">
+			{% if surgical_history %}			
+			<div class="row">	
+				<label class="col-xs-4 label-name">Informations:</label>
+				  <label class="col-xs-2 label-value">Oui</label>
+				  <textarea rows="1" readonly class="col-xs-5" id="cardio_info" name="cardio_info">{{surgical_history}}</textarea> 
+			</div>
+			{% endif %}
+          </div>
+      </div>  
+
+	  <div class="panel panel-primary">
+	    <div class="panel-heading">ANTECEDENTS CHIRURGICAUX</div>
+		  <div class="panel-body">
+			{% if cardio %}			
+			<div class="row">	
+				<label class="col-xs-4 label-name">Cardiaque:</label>
+				  <label class="col-xs-2 label-value">Oui</label>
+				  <textarea rows="1" readonly class="col-xs-5" id="cardio_info" name="cardio_info">{{cardio_info}}</textarea> 
+			</div>
+			{% endif %}
+          </div>
+      </div>  
+    
+	  <div class="panel panel-primary">
+	    <div class="panel-heading">ALLERGIE</div>
+		  <div class="panel-body">
+			<div class="row">
+				{% if allergy %}	
+				  <label class="col-xs-2 label-value">Oui</label>
+				  <textarea readonly class="col-xs-5 input-group" rows="1" id="cardio_info" name="cardio_info">{{allergy_info}}</textarea> 
+				{% else %}
+				  <label class="col-xs-8 label-value">Non</label>
+				{% endif %}
+			</div>	
+          </div>
+      </div>  
+    
+	  <div class="panel panel-primary">
+	    <div class="panel-heading">TRAITEMENT</div>
+		  <div class="panel-body">
+			{% if cardio %}			
+			<div class="row">	
+				<label class="col-xs-4 label-name">Informations:</label>
+				  <label class="col-xs-2 label-value">Oui</label>
+				  <textarea rows="1" readonly class="col-xs-5" id="cardio_info" name="cardio_info">{{current_treatment}}</textarea> 
+			</div>
+			{% endif %}
+          </div>
+      </div>  
+    
+    
+  </div> <!-- wrap -->
 
 <div id="footer">
   <div class="col-xs-12  navbar-fixed-bottom">
 	  <div class="row" id="bottomNav">
-	   <div class="label-name">Personne à contacter (urgence)</div>
+	   <div class="label-name">En cas d'urgence pressez:</div>
 		<div class="col-xs-12">
 			<a href="tel:0622044044"><i class="glyphicon glyphicon-phone-alt"></i>  {{emergency_contact_tel}}</a>
 		</div>
